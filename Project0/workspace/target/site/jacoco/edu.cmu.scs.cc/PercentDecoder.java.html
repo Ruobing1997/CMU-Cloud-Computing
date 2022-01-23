@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PercentDecoder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">data-filter</a> &gt; <a href="index.source.html" class="el_package">edu.cmu.scs.cc</a> &gt; <span class="el_source">PercentDecoder.java</span></div><h1>PercentDecoder.java</h1><pre class="source lang-java linenums">package edu.cmu.scs.cc;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
+/**
+ * Copyright (C) 2014  Wikimedia Foundation
+ *
+ * &lt;p&gt;Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * &lt;p&gt;http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * &lt;p&gt;Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * &lt;p&gt;Decoder for percent encoded strings
+ * &lt;p/&gt;
+ * In contrast to URLDecoder, this decoder keeps percent signs that are not
+ * followed by hexadecimal digits, and does not convert plus-signs to spaces.
+ */
+public final class PercentDecoder {
+
+    /**
+     * Hex value benchmark.
+     */
+    private static final char HEX_0 = 0x30;
+    private static final char HEX_UPPER_A = 0x37;
+    private static final char HEX_LOWER_A = 0x57;
+
+    /**
+     * The offset of the first hex value of
+     * percent encoded UTF-8 characters.
+     */
+    private static final int UTF_8_OFFSET = 4;
+
+    /**
+     * Utility classes should not have a public or default constructor.
+     */
+    private PercentDecoder() {
+
+    }
+
+    /**
+     * Return hex value given a byte.
+     *
+     * @param b to convert
+     * @return hex value, -1 if if invalid
+     */
+    private static int getHexValue(final byte b) {
+<span class="pc bpc" id="L55" title="1 of 4 branches missed.">        if ('0' &lt;= b &amp;&amp; b &lt;= '9') {</span>
+<span class="fc" id="L56">            return b - HEX_0;</span>
+<span class="pc bpc" id="L57" title="1 of 4 branches missed.">        } else if ('A' &lt;= b &amp;&amp; b &lt;= 'F') {</span>
+<span class="fc" id="L58">            return b - HEX_UPPER_A;</span>
+<span class="pc bpc" id="L59" title="2 of 4 branches missed.">        } else if ('a' &lt;= b &amp;&amp; b &lt;= 'f') {</span>
+<span class="fc" id="L60">            return b - HEX_LOWER_A;</span>
+        }
+<span class="nc" id="L62">        return -1;</span>
+    }
+
+    /**
+     * Decodes percent encoded strings.
+     *
+     * @param encoded the percent encoded string
+     * @return the decoded string
+     */
+    public static String decode(final String encoded) {
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">        if (encoded == null) {</span>
+<span class="nc" id="L73">            return null;</span>
+        }
+
+<span class="fc" id="L76">        byte[] encodedChars = encoded.getBytes(StandardCharsets.UTF_8);</span>
+<span class="fc" id="L77">        int encodedLength = encodedChars.length;</span>
+<span class="fc" id="L78">        byte[] decodedChars = new byte[encodedLength];</span>
+
+<span class="fc" id="L80">        int decodedIdx = 0;</span>
+<span class="fc" id="L81">        for (int encodedIdx = 0;</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">             encodedIdx &lt; encodedLength;</span>
+<span class="fc" id="L83">             encodedIdx++, decodedIdx++) {</span>
+<span class="fc" id="L84">            decodedChars[decodedIdx] = encodedChars[encodedIdx];</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">            if (decodedChars[decodedIdx] == '%') {</span>
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">                if (encodedIdx + 2 &lt; encodedLength) {</span>
+<span class="fc" id="L87">                    int value1 = getHexValue(</span>
+                            encodedChars[encodedIdx + 1]);
+<span class="fc" id="L89">                    int value2 = getHexValue(</span>
+                            encodedChars[encodedIdx + 2]);
+<span class="pc bpc" id="L91" title="2 of 4 branches missed.">                    if (value1 &gt;= 0 &amp;&amp; value2 &gt;= 0) {</span>
+<span class="fc" id="L92">                        decodedChars[decodedIdx] =</span>
+                                (byte) ((value1 &lt;&lt; UTF_8_OFFSET) + value2);
+<span class="fc" id="L94">                        encodedIdx += 2;</span>
+                    }
+                }
+            }
+        }
+<span class="fc" id="L99">        return new String(Arrays.copyOf(decodedChars, decodedIdx),</span>
+                StandardCharsets.UTF_8);
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

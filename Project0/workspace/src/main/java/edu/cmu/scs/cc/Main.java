@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.TreeMap;
 import java.util.Map.Entry;
@@ -30,9 +31,9 @@ public class Main {
     public static void main(final String[] args) throws IOException {
         // TODO: modify and make the try-with-resources statement encoding aware
         try (PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(
-                new FileOutputStream("output")), true);
+                new FileOutputStream("output"), StandardCharsets.UTF_8), true);
             BufferedReader br = new BufferedReader(
-                    new InputStreamReader(System.in))) {
+                    new InputStreamReader(System.in, StandardCharsets.UTF_8))) {
             // do not change the code below
             TreeMap<String, Integer> pageviewMap = new TreeMap<>();
             String page;

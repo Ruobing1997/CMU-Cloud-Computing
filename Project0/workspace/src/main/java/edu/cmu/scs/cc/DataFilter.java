@@ -1,9 +1,10 @@
 package edu.cmu.scs.cc;
 
-import java.util.Collections;
-import java.util.LinkedList;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 /**
  * <p>Implement a data filter using test-driven development (TDD).</p>
@@ -189,7 +190,8 @@ public final class DataFilter {
      * @return true if length == 4
      */
     static boolean checkDataLength(final String[] columns) {
-        throw new RuntimeException("To be implemented");
+//        throw new RuntimeException("To be implemented");
+        return columns.length == 4;
     }
 
     /**
@@ -199,7 +201,8 @@ public final class DataFilter {
      * @return true if the domain code is en or en.m
      */
     static boolean checkDomain(final String[] columns) {
-        throw new RuntimeException("To be implemented");
+        return (Objects.equals(columns[0], "en")
+                || Objects.equals(columns[0], "en.m"));
     }
 
     /**
@@ -209,7 +212,9 @@ public final class DataFilter {
      * @return false if it is a special page
      */
     static boolean checkSpecialPage(final String[] columns) {
-        throw new RuntimeException("To be implemented");
+        String title = columns[1];
+        boolean checker = Arrays.asList(SPECIAL_PAGES).contains(title);
+        return !checker;
     }
 
     /**
@@ -222,7 +227,8 @@ public final class DataFilter {
      * @return false if the title starts with any blacklisted prefix
      */
     static boolean checkPrefix(final String[] columns) {
-        throw new RuntimeException("To be implemented");
+        String title = columns[1];
+        return !StringUtils.startsWithAny(title.toLowerCase(Locale.ROOT), PREFIX_BLACKLIST);
     }
 
     /**
@@ -232,7 +238,8 @@ public final class DataFilter {
      * @return false if the title ends with any blacklisted suffix
      */
     static boolean checkSuffix(final String[] columns) {
-        throw new RuntimeException("To be implemented");
+        String title = columns[1];
+        return !StringUtils.endsWithAny(title.toLowerCase(Locale.ROOT), SUFFIX_BLACKLIST);
     }
 
     /**
@@ -248,6 +255,6 @@ public final class DataFilter {
      * @return false if the title starts with [a-z]
      */
     static boolean checkFirstLetter(final String[] columns) {
-        throw new RuntimeException("To be implemented");
+        return !columns[1].substring(0,1).matches("[a-z]");
     }
 }

@@ -110,16 +110,44 @@ class DataFilterTest {
 
     @Test
     void checkSuffix() {
-        throw new RuntimeException("add test cases on your own");
+        assertTrue(DataFilter.checkSuffix(
+                DataFilter.getColumns("en Carnegie_Mellon_University 34 0")));
+        assertFalse(DataFilter.checkSuffix(
+                DataFilter.getColumns("en kitten.jpg 34 0")));
     }
 
     @Test
     void checkFirstLetter() {
-        throw new RuntimeException("add test cases on your own");
+        assertTrue(DataFilter.checkFirstLetter(
+                DataFilter.getColumns("en Carnegie_Mellon_University 34 0")));
+        assertFalse(DataFilter.checkFirstLetter(
+                DataFilter.getColumns("en user:K6ka 34 0")));
     }
 
     @Test
     void checkAllRules() {
-        throw new RuntimeException("add test cases on your own");
+        assertTrue(DataFilter.checkAllRules(
+                DataFilter.getColumns("en Carnegie_Mellon_University 34 0")));
+        assertTrue(DataFilter.checkAllRules(
+                DataFilter.getColumns("en.m Carnegie_Mellon_University_in_Qatar 1 0")));
+        // check data length
+        assertFalse(DataFilter.checkAllRules(
+                DataFilter.getColumns("en.m Carnegie_Mellon_University_in_Qatar 1 0 2")));
+        // check domain
+        assertFalse(DataFilter.checkAllRules(
+                DataFilter.getColumns("commons.m Carnegie_Mellon_University_in_Qatar 1 0")));
+        // check SpecialPage
+        assertFalse(DataFilter.checkAllRules(
+                DataFilter.getColumns("en.m Main_Page 1 0")));
+        // check Prefix
+        assertFalse(DataFilter.checkAllRules(
+                DataFilter.getColumns("en Special:Temp 34 0")));
+        // checkSuffix
+        assertFalse(DataFilter.checkAllRules(
+                DataFilter.getColumns("en.m Kitten.jpg 11 0")));
+        // checkFirstLetter
+        assertFalse(DataFilter.checkAllRules(
+                DataFilter.getColumns("en abc 34 0")));
+
     }
 }

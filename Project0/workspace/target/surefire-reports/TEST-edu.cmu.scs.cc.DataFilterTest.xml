@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="edu.cmu.scs.cc.DataFilterTest" time="0.1" tests="9" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="gopherProxySet" value="false"/>
+    <property name="awt.toolkit" value="sun.lwawt.macosx.LWCToolkit"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="java.specification.version" value="1.8"/>
+    <property name="sun.cpu.isalist" value=""/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/Users/ruobing/Desktop/2022Spring/15619/CloudComputing-Projects/Project0/workspace/target/test-classes:/Users/ruobing/Desktop/2022Spring/15619/CloudComputing-Projects/Project0/workspace/target/classes:/Users/ruobing/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.2.0/junit-jupiter-engine-5.2.0.jar:/Users/ruobing/.m2/repository/org/apiguardian/apiguardian-api/1.0.0/apiguardian-api-1.0.0.jar:/Users/ruobing/.m2/repository/org/junit/platform/junit-platform-engine/1.2.0/junit-platform-engine-1.2.0.jar:/Users/ruobing/.m2/repository/org/junit/platform/junit-platform-commons/1.2.0/junit-platform-commons-1.2.0.jar:/Users/ruobing/.m2/repository/org/opentest4j/opentest4j/1.1.0/opentest4j-1.1.0.jar:/Users/ruobing/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.2.0/junit-jupiter-api-5.2.0.jar:/Users/ruobing/.m2/repository/org/hamcrest/hamcrest-all/1.3/hamcrest-all-1.3.jar:/Users/ruobing/.m2/repository/org/apache/commons/commons-lang3/3.7/commons-lang3-3.7.jar:"/>
+    <property name="java.vm.vendor" value="Amazon.com Inc."/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="https://aws.amazon.com/corretto/"/>
+    <property name="user.timezone" value=""/>
+    <property name="java.vm.specification.version" value="1.8"/>
+    <property name="os.name" value="Mac OS X"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.boot.library.path" value="/Users/ruobing/Library/Java/JavaVirtualMachines/corretto-1.8.0_322/Contents/Home/jre/lib"/>
+    <property name="sun.java.command" value="/Users/ruobing/Desktop/2022Spring/15619/CloudComputing-Projects/Project0/workspace/target/surefire/surefirebooter7293553367625368508.jar /Users/ruobing/Desktop/2022Spring/15619/CloudComputing-Projects/Project0/workspace/target/surefire 2022-01-23T00-22-18_208-jvmRun1 surefire6441568235528327429tmp surefire_02129793803485268579tmp"/>
+    <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="surefire.test.class.path" value="/Users/ruobing/Desktop/2022Spring/15619/CloudComputing-Projects/Project0/workspace/target/test-classes:/Users/ruobing/Desktop/2022Spring/15619/CloudComputing-Projects/Project0/workspace/target/classes:/Users/ruobing/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.2.0/junit-jupiter-engine-5.2.0.jar:/Users/ruobing/.m2/repository/org/apiguardian/apiguardian-api/1.0.0/apiguardian-api-1.0.0.jar:/Users/ruobing/.m2/repository/org/junit/platform/junit-platform-engine/1.2.0/junit-platform-engine-1.2.0.jar:/Users/ruobing/.m2/repository/org/junit/platform/junit-platform-commons/1.2.0/junit-platform-commons-1.2.0.jar:/Users/ruobing/.m2/repository/org/opentest4j/opentest4j/1.1.0/opentest4j-1.1.0.jar:/Users/ruobing/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.2.0/junit-jupiter-api-5.2.0.jar:/Users/ruobing/.m2/repository/org/hamcrest/hamcrest-all/1.3/hamcrest-all-1.3.jar:/Users/ruobing/.m2/repository/org/apache/commons/commons-lang3/3.7/commons-lang3-3.7.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/Users/ruobing"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.home" value="/Users/ruobing/Library/Java/JavaVirtualMachines/corretto-1.8.0_322/Contents/Home/jre"/>
+    <property name="basedir" value="/Users/ruobing/Desktop/2022Spring/15619/CloudComputing-Projects/Project0/workspace"/>
+    <property name="file.separator" value="/"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.CGraphicsEnvironment"/>
+    <property name="surefire.real.class.path" value="/Users/ruobing/Desktop/2022Spring/15619/CloudComputing-Projects/Project0/workspace/target/surefire/surefirebooter7293553367625368508.jar:/Users/ruobing/.m2/repository/org/jacoco/org.jacoco.agent/0.8.2/org.jacoco.agent-0.8.2-runtime.jar"/>
+    <property name="sun.boot.class.path" value="/Users/ruobing/Library/Java/JavaVirtualMachines/corretto-1.8.0_322/Contents/Home/jre/lib/resources.jar:/Users/ruobing/Library/Java/JavaVirtualMachines/corretto-1.8.0_322/Contents/Home/jre/lib/rt.jar:/Users/ruobing/Library/Java/JavaVirtualMachines/corretto-1.8.0_322/Contents/Home/jre/lib/sunrsasign.jar:/Users/ruobing/Library/Java/JavaVirtualMachines/corretto-1.8.0_322/Contents/Home/jre/lib/jsse.jar:/Users/ruobing/Library/Java/JavaVirtualMachines/corretto-1.8.0_322/Contents/Home/jre/lib/jce.jar:/Users/ruobing/Library/Java/JavaVirtualMachines/corretto-1.8.0_322/Contents/Home/jre/lib/charsets.jar:/Users/ruobing/Library/Java/JavaVirtualMachines/corretto-1.8.0_322/Contents/Home/jre/lib/jfr.jar:/Users/ruobing/Library/Java/JavaVirtualMachines/corretto-1.8.0_322/Contents/Home/jre/classes"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="java.runtime.version" value="1.8.0_322-b06"/>
+    <property name="user.name" value="ruobing"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="12.1"/>
+    <property name="java.endorsed.dirs" value="/Users/ruobing/Library/Java/JavaVirtualMachines/corretto-1.8.0_322/Contents/Home/jre/lib/endorsed"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="localRepository" value="/Users/ruobing/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/corretto/corretto-8/issues/"/>
+    <property name="java.io.tmpdir" value="/var/folders/dy/69n2ngkd2cl63z8kpw_sq6q40000gn/T/"/>
+    <property name="idea.version" value="2021.2.3"/>
+    <property name="java.version" value="1.8.0_322"/>
+    <property name="user.dir" value="/Users/ruobing/Desktop/2022Spring/15619/CloudComputing-Projects/Project0/workspace"/>
+    <property name="os.arch" value="x86_64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="java.awt.printerjob" value="sun.lwawt.macosx.CPrinterJob"/>
+    <property name="sun.os.patch.level" value="unknown"/>
+    <property name="java.library.path" value="/Users/ruobing/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:."/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.vendor" value="Amazon.com Inc."/>
+    <property name="java.vm.version" value="25.322-b06"/>
+    <property name="java.ext.dirs" value="/Users/ruobing/Library/Java/Extensions:/Users/ruobing/Library/Java/JavaVirtualMachines/corretto-1.8.0_322/Contents/Home/jre/lib/ext:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
+    <property name="java.class.version" value="52.0"/>
+    <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+  </properties>
+  <testcase name="checkDataLength" classname="edu.cmu.scs.cc.DataFilterTest" time="0.015"/>
+  <testcase name="sortRecords" classname="edu.cmu.scs.cc.DataFilterTest" time="0.008"/>
+  <testcase name="checkAllRules" classname="edu.cmu.scs.cc.DataFilterTest" time="0.049"/>
+  <testcase name="checkDomain" classname="edu.cmu.scs.cc.DataFilterTest" time="0.001"/>
+  <testcase name="checkPrefix" classname="edu.cmu.scs.cc.DataFilterTest" time="0.001"/>
+  <testcase name="checkSuffix" classname="edu.cmu.scs.cc.DataFilterTest" time="0.001"/>
+  <testcase name="checkFirstLetter" classname="edu.cmu.scs.cc.DataFilterTest" time="0.001"/>
+  <testcase name="getColumns" classname="edu.cmu.scs.cc.DataFilterTest" time="0.002"/>
+  <testcase name="checkSpecialPage" classname="edu.cmu.scs.cc.DataFilterTest" time="0.001"/>
+</testsuite>
