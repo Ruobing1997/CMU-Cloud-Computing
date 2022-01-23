@@ -136,7 +136,7 @@ q1() {
   # <matched_line>
   # <matched_line>
   #
-  :
+  grep -i "cloud" output
 }
 
 q2() {
@@ -188,7 +188,7 @@ q2() {
   #
   # Standard output format:
   # <number>
-  :
+  grep -i -w -c "cloud" output
 }
 
 q3() {
@@ -227,7 +227,7 @@ q3() {
   # <matched_line>
   # <matched_line>
   # ...
-  :
+  grep -i -P "^cloud" output
 }
 
 
@@ -270,7 +270,7 @@ q4() {
   # <record with view count greater than 5000>
   # <record with view count greater than 5000>
   # ...
-  :
+  awk '{ if ($2 > 5000) { print } }' output
 }
 
 q5() {
@@ -291,7 +291,7 @@ q5() {
   #
   # Standard output format:
   # <number>
-  :
+  awk '{ cnt+=$2 } END { print cnt }' output
 }
 
 ################################################################################
