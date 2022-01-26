@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DataFilter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">data-filter</a> &gt; <a href="index.source.html" class="el_package">edu.cmu.scs.cc</a> &gt; <span class="el_source">DataFilter.java</span></div><h1>DataFilter.java</h1><pre class="source lang-java linenums">package edu.cmu.scs.cc;
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.Objects;
+import java.util.TreeMap;
+import java.util.Locale;
+import java.util.Arrays;
+import java.util.Map.Entry;
+
+/**
+ * &lt;p&gt;Implement a data filter using test-driven development (TDD).&lt;/p&gt;
+ *
+ * &lt;p&gt;A valid line in the pageview files has 4 space-separated fields: &lt;br&gt;
+ *
+ * &lt;p&gt;{@code domain_code page_title count_views total_response_size} &lt;br&gt;
+ *
+ * &lt;p&gt;
+ * Transform and filter the dataset by the following rules:
+ * &lt;ul&gt;
+ * &lt;li&gt;Exclude lines that don't have four columns&lt;/li&gt;
+ * &lt;li&gt;Exclude lines if the the domain code is not exactly &quot;en&quot; or &quot;en.m&quot; (case
+ * sensitive)
+ * &quot;en&quot; indicates the article is an English desktop page, and &quot;en.m&quot; is for
+ * English mobile page&lt;/li&gt;
+ * &lt;li&gt;The title might be percent-encoded by Wikipedia, use the provided
+ * {@link PercentDecoder#decode(String)} method to decode the title for each
+ * record
+ * e.g. &quot;Special%3ASearch&quot; will be decoded into &quot;Special:Search&quot;&lt;/li&gt;
+ * &lt;li&gt;Exclude lines that the title starts with any prefix defined in
+ * {@link #PREFIX_BLACKLIST} (case insensitive)&lt;/li&gt;
+ * &lt;li&gt;Exclude lines that the title ends with any suffix defined in
+ * {@link #SUFFIX_BLACKLIST} (case insensitive)&lt;/li&gt;
+ * &lt;li&gt;Exclude lines if the title starts with any lowercase English
+ * character&lt;/li&gt;
+ * &lt;li&gt;Exclude lines if the title is exactly any of the special pages defined in
+ * the provided list {@link #SPECIAL_PAGES} (case sensitive)&lt;/li&gt;
+ * &lt;/ul&gt;
+ * &lt;/p&gt;
+ *
+ * &lt;p&gt;We provide you with a starter code template, as well as the code of constants,
+ * Standard I/O, summing the desktop and mobile site pageviews, and sorting the
+ * output.
+ *
+ * &lt;p&gt;Your task is to implement the methods marked with &quot;To be implemented&quot;.&lt;/p&gt;
+ *
+ * &lt;p&gt;Execute the command {@code mvn test} to run the unit tests in
+ * DataFilterTest&lt;/p&gt;
+ */
+public final class DataFilter {
+
+    /**
+     * Column Name.
+     */
+    static final int DOMAIN = 0;
+    static final int TITLE = 1;
+    static final int ACCESS = 2;
+    /**
+     * Column length.
+     */
+    private static final int CLEAN_DATA_LENGTH = 4;
+
+    /**
+     * Prefix blacklist.
+     */
+<span class="fc" id="L68">    private static final String[] PREFIX_BLACKLIST = {&quot;media:&quot;,</span>
+            &quot;special:&quot;,
+            &quot;talk:&quot;,
+            &quot;user:&quot;,
+            &quot;user_talk:&quot;,
+            &quot;wikipedia:&quot;,
+            &quot;wikipedia_talk:&quot;,
+            &quot;file:&quot;,
+            &quot;file_talk:&quot;,
+            &quot;mediawiki:&quot;,
+            &quot;mediawiki_talk:&quot;,
+            &quot;template:&quot;,
+            &quot;template_talk:&quot;,
+            &quot;help:&quot;,
+            &quot;help_talk:&quot;,
+            &quot;category:&quot;,
+            &quot;category_talk:&quot;,
+            &quot;portal:&quot;,
+            &quot;portal_talk:&quot;,
+            &quot;book:&quot;,
+            &quot;book_talk:&quot;,
+            &quot;draft:&quot;,
+            &quot;draft_talk:&quot;,
+            &quot;education_program:&quot;,
+            &quot;education_program_talk:&quot;,
+            &quot;timedtext:&quot;,
+            &quot;timedtext_talk:&quot;,
+            &quot;module:&quot;,
+            &quot;module_talk:&quot;,
+            &quot;gadget:&quot;,
+            &quot;gadget_talk:&quot;,
+            &quot;gadget_definition:&quot;,
+            &quot;gadget_definition_talk:&quot;};
+    /**
+     * Suffix blacklist.
+     */
+<span class="fc" id="L104">    private static final String[] SUFFIX_BLACKLIST = {&quot;.png&quot;, &quot;.gif&quot;,</span>
+            &quot;.jpg&quot;, &quot;.jpeg&quot;,
+            &quot;.tiff&quot;, &quot;.tif&quot;,
+            &quot;.xcf&quot;, &quot;.mid&quot;,
+            &quot;.ogg&quot;, &quot;.ogv&quot;,
+            &quot;.svg&quot;, &quot;.djvu&quot;,
+            &quot;.oga&quot;, &quot;.flac&quot;,
+            &quot;.opus&quot;, &quot;.wav&quot;,
+            &quot;.webm&quot;, &quot;.ico&quot;, &quot;.txt&quot;,
+            &quot;_(disambiguation)&quot;};
+
+    /**
+     * Special pages.
+     */
+<span class="fc" id="L118">    private static final String[] SPECIAL_PAGES = {</span>
+            &quot;Main_Page&quot;, &quot;404.php&quot;, &quot;-&quot;};
+
+
+    /**
+     * Utility classes should not have a public or default constructor.
+     */
+    private DataFilter() {
+
+    }
+
+    /**
+     * Sort the map in descending numerical order of the values,
+     * break ties by the ascending lexicographical order of keys,
+     * and return a list of sorted entries.
+     *
+     * @param records to sort
+     * @return sorted entry list.
+     */
+    static LinkedList&lt;Entry&lt;String, Integer&gt;&gt; sortRecords(
+            final TreeMap&lt;String, Integer&gt; records) {
+<span class="fc" id="L139">        LinkedList&lt;Entry&lt;String, Integer&gt;&gt; results =</span>
+<span class="fc" id="L140">                new LinkedList&lt;&gt;(records.entrySet());</span>
+<span class="fc" id="L141">        Collections.sort(results, (e1, e2) -&gt; {</span>
+<span class="fc" id="L142">            int cmp = -e1.getValue().compareTo(e2.getValue());</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">            if (cmp != 0) {</span>
+<span class="fc" id="L144">                return cmp;</span>
+            } else {
+<span class="fc" id="L146">                return e1.getKey().compareTo(e2.getKey());</span>
+            }
+        });
+<span class="fc" id="L149">        return results;</span>
+    }
+
+    /**
+     * Perform percent-decoding and split the record into columns,
+     * separated by single or consecutive whitespaces.
+     *
+     * &lt;p&gt;We pre-implemented this method for you to help you follow and learn how
+     * to perform test-driven development.
+     *
+     * @param record the pageview record
+     * @return columns as a String array
+     */
+    static String[] getColumns(final String record) {
+<span class="fc" id="L163">        return PercentDecoder.decode(record).split(&quot;\\s+&quot;);</span>
+    }
+
+    /**
+     * Check if the record passes all the rules.
+     *
+     * &lt;p&gt;You do not need to modify this method. Instead, you
+     * should divide and conquer the complicated filtering task by implementing:
+     * {@link #checkDataLength(String[])}
+     * {@link #checkDomain(String[])}
+     * {@link #checkSpecialPage(String[])}
+     * {@link #checkPrefix(String[])}
+     * {@link #checkSuffix(String[])}
+     * {@link #checkFirstLetter(String[])}
+     *
+     * @param columns record as columns
+     * @return true if the record passes all the rules
+     */
+    static boolean checkAllRules(final String[] columns) {
+<span class="fc bfc" id="L182" title="All 2 branches covered.">        return checkDataLength(columns)</span>
+<span class="fc bfc" id="L183" title="All 2 branches covered.">                &amp;&amp; checkDomain(columns)</span>
+<span class="fc bfc" id="L184" title="All 2 branches covered.">                &amp;&amp; checkSpecialPage(columns)</span>
+<span class="fc bfc" id="L185" title="All 2 branches covered.">                &amp;&amp; checkPrefix(columns)</span>
+<span class="fc bfc" id="L186" title="All 2 branches covered.">                &amp;&amp; checkSuffix(columns)</span>
+<span class="fc bfc" id="L187" title="All 2 branches covered.">                &amp;&amp; checkFirstLetter(columns);</span>
+    }
+
+    /**
+     * Check if column length == 4.
+     *
+     * @param columns record as columns
+     * @return true if length == 4
+     */
+    static boolean checkDataLength(final String[] columns) {
+//        throw new RuntimeException(&quot;To be implemented&quot;);
+<span class="fc bfc" id="L198" title="All 2 branches covered.">        return columns.length == 4;</span>
+    }
+
+    /**
+     * Check if the domain code is en or en.m (case sensitive).
+     *
+     * @param columns record as columns
+     * @return true if the domain code is en or en.m
+     */
+    static boolean checkDomain(final String[] columns) {
+<span class="fc bfc" id="L208" title="All 2 branches covered.">        return (Objects.equals(columns[0], &quot;en&quot;)</span>
+<span class="fc bfc" id="L209" title="All 2 branches covered.">                || Objects.equals(columns[0], &quot;en.m&quot;));</span>
+    }
+
+    /**
+     * Check if the title is any special page, case sensitive.
+     *
+     * @param columns record as columns
+     * @return false if it is a special page
+     */
+    static boolean checkSpecialPage(final String[] columns) {
+<span class="fc" id="L219">        String title = columns[1];</span>
+<span class="fc" id="L220">        boolean checker = Arrays.asList(SPECIAL_PAGES).contains(title);</span>
+<span class="fc bfc" id="L221" title="All 2 branches covered.">        return !checker;</span>
+    }
+
+    /**
+     * Check if the title starts with any blacklisted prefix, case insensitive.
+     *
+     * &lt;p&gt;Any occurrences of {@code %3a} has already been decoded into {@code :}
+     * when this method executes (you can assume the text is percent-decoded)
+     *
+     * @param columns record as columns
+     * @return false if the title starts with any blacklisted prefix
+     */
+    static boolean checkPrefix(final String[] columns) {
+<span class="fc" id="L234">        String title = columns[1];</span>
+<span class="fc bfc" id="L235" title="All 2 branches covered.">        return !StringUtils.startsWithAny(title.toLowerCase(Locale.ROOT), PREFIX_BLACKLIST);</span>
+    }
+
+    /**
+     * Check if the title ends with any blacklisted suffix, case insensitive.
+     *
+     * @param columns record as columns
+     * @return false if the title ends with any blacklisted suffix
+     */
+    static boolean checkSuffix(final String[] columns) {
+<span class="fc" id="L245">        String title = columns[1];</span>
+<span class="fc bfc" id="L246" title="All 2 branches covered.">        return !StringUtils.endsWithAny(title.toLowerCase(Locale.ROOT), SUFFIX_BLACKLIST);</span>
+    }
+
+    /**
+     * Check if the first letter of the title is an English lowercase letter.
+     *
+     * &lt;p&gt;Many other Unicode characters are lowercase too.
+     * Only [a-z] should count.
+     *
+     * &lt;p&gt;Hint: Be careful and read the Javadoc if you want to use
+     * {@link Character#isLowerCase(char)}.
+     *
+     * @param columns record as columns
+     * @return false if the title starts with [a-z]
+     */
+    static boolean checkFirstLetter(final String[] columns) {
+<span class="fc bfc" id="L262" title="All 2 branches covered.">        return !columns[1].substring(0,1).matches(&quot;[a-z]&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8e937e4d-7a2a-4e70-8dca-7649b1fc7bc0" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/data-filter.iml" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="ProjectId" id="24526UgQAgqY26MJBifWPIz3oGz" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.editor" />
+  </component>
+  <component name="RunManager" selected="Maven.data-filter [clean,test,jacoco:report]">
+    <configuration name="DataFilterTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="data-filter" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="edu.cmu.scs.cc.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="edu.cmu.scs.cc" />
+      <option name="MAIN_CLASS_NAME" value="edu.cmu.scs.cc.DataFilterTest" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DataFilterTest.checkAllRules" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="data-filter" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="edu.cmu.scs.cc.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="edu.cmu.scs.cc" />
+      <option name="MAIN_CLASS_NAME" value="edu.cmu.scs.cc.DataFilterTest" />
+      <option name="METHOD_NAME" value="checkAllRules" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DataFilterTest.checkSuffix" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="data-filter" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="edu.cmu.scs.cc.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" value="corretto-1.8" />
+      <option name="PACKAGE_NAME" value="edu.cmu.scs.cc" />
+      <option name="MAIN_CLASS_NAME" value="edu.cmu.scs.cc.DataFilterTest" />
+      <option name="METHOD_NAME" value="checkSuffix" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="data-filter [clean,test,jacoco:report]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings">
+          <MavenRunnerSettings>
+            <option name="delegateBuildToMaven" value="false" />
+            <option name="environmentProperties">
+              <map />
+            </option>
+            <option name="jreName" value="corretto-1.8" />
+            <option name="mavenProperties">
+              <map />
+            </option>
+            <option name="passParentEnv" value="true" />
+            <option name="runMavenInBackground" value="true" />
+            <option name="skipTests" value="false" />
+            <option name="vmOptions" value="" />
+          </MavenRunnerSettings>
+        </option>
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="clean" />
+                <option value="test" />
+                <option value="jacoco:report" />
+              </list>
+            </option>
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="JUnit.DataFilterTest" />
+      <item itemvalue="JUnit.DataFilterTest.checkAllRules" />
+      <item itemvalue="JUnit.DataFilterTest.checkSuffix" />
+      <item itemvalue="Maven.data-filter [clean,test,jacoco:report]" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.DataFilterTest.checkAllRules" />
+        <item itemvalue="JUnit.DataFilterTest" />
+        <item itemvalue="JUnit.DataFilterTest.checkSuffix" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8e937e4d-7a2a-4e70-8dca-7649b1fc7bc0" name="Changes" comment="" />
+      <created>1642905953219</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1642905953219</updated>
+      <workItem from="1642905954946" duration="12696000" />
+      <workItem from="1642919514456" duration="3526000" />
+      <workItem from="1642927102793" duration="678000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/workspace$DataFilterTest.ic" NAME="DataFilterTest Coverage Results" MODIFIED="1642914190820" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>edu.cmu.scs.cc.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/workspace$DataFilterTest_checkAllRules.ic" NAME="DataFilterTest.checkAllRules Coverage Results" MODIFIED="1642914121030" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>edu.cmu.scs.cc.*</FILTER>
+    </SUITE>
+  </component>
+</project>
