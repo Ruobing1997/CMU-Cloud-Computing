@@ -1,4 +1,5 @@
 
+from multiprocessing.connection import Listener
 from tracemalloc import Statistic
 from typing import Protocol
 from urllib import response
@@ -52,7 +53,7 @@ def create_instance(ami, sg_name):
     :return: instance object
     """
 
-    # TODO: Create an EC2 instance
+    # Create an EC2 instance
     # decalare ec2:
     ec2 = boto3.resource('ec2', region_name= "us-east-1")
     instance = ec2.create_instances(
@@ -132,6 +133,10 @@ def get_test_id(response):
     return regexpr.findall(response_text)[0]
 
 def check_running_instances():
+    """
+    Check the current running instances.
+    :return: a list that contains all running instances.
+    """
     ec2 = boto3.resource('ec2', region_name='us-east-1')
     ls_running_instances = []
     instances = ec2.instances.filter(
@@ -141,29 +146,59 @@ def check_running_instances():
     return ls_running_instances
 
 def terminate_instances(ls_running_instances):
+    """
+    Terminate all running instance to make sure no cost.
+    :param: 
+    :return: None
+    """
     ec2 = boto3.resource('ec2', region_name='us-east-1')
     ec2.instances.filter(InstanceIds=ls_running_instances).terminate()
+
 def destroy_asg():
+    """
+    Delete the auto scaling group.
+    :return: None
+    """
     client = boto3.client("autoscaling", region_name= "us-east-1")
-    response = client.delete_auto_scaling_group(
+    client.delete_auto_scaling_group(
         AutoScalingGroupName = AUTO_SCALING_GROUP_NAME,
+        ForceDelete = True
     )
 def destroy_load_balancer(lb_arn):
+    """
+    Delete the load balancer.
+    :return: None
+    """
     client = boto3.client('elbv2', region_name= "us-east-1")
-    response = client.delete_load_balancer(
+    client.delete_load_balancer(
         LoadBalancerArn = lb_arn
     )
+
 def destroy_target_groups(tg_arn):
+    """
+    Delete the target group.
+    :return: None
+    """
     client = boto3.client('elbv2', region_name= "us-east-1")
-    response = client.delete_target_group(
+    client.delete_target_group(
         TargetGroupArn = tg_arn
     )
+
 def destroy_launch_config():
+    """
+    Delete launch configuration.
+    :return: None
+    """
     client = boto3.client("autoscaling", region_name= "us-east-1")
-    response = client.delete_launch_configuration(
+    client.delete_launch_configuration(
         LaunchConfigurationName = LAUNCH_CONFIGURATION_NAME
     )
+
 def desotry_security_group():
+    """
+    Delete Security Group that is being used in this task.
+    :return: None
+    """
     ec2 = boto3.resource('ec2')
     security_group = ec2.SecurityGroup('id')
     security_group.delete(
@@ -175,7 +210,8 @@ def desotry_security_group():
 def destroy_resources(lb_arn, tg_arn):
     """
     Delete all resources created for this task
-    :param msg: message
+    :param lb_arn: The Amazon Resource name (ARN) of the load balancer.
+    :param tg_arn: The Amazon Resource name (ARN) of the target group.
     :return: None
     """
     # TODO: implement this method
@@ -187,10 +223,10 @@ def destroy_resources(lb_arn, tg_arn):
     destroy_launch_config()
     # delete target groups
     destroy_target_groups(tg_arn)
-    # delete security groups
-    desotry_security_group()
     # terminate all intances
     terminate_instances(check_running_instances)
+    # delete security groups
+    desotry_security_group()
 
 
 def print_section(msg):
@@ -361,7 +397,7 @@ def create_ASG(name, lau_config, tg_arn):
         LaunchConfigurationName = lau_config,
         MinSize = configuration['asg_min_size'],
         MaxSize = configuration['asg_max_size'],
-        # DesiredCapacity = 1,
+        DesiredCapacity = 1,
         HealthCheckType = 'EC2',
         HealthCheckGracePeriod = configuration['health_check_grace_period'],
         DefaultCooldown = configuration['asg_default_cool_down_period'],
@@ -516,6 +552,7 @@ def main():
     print_section('6. Associate ELB with target group')
     # TODO Associate ELB with target group
     listener = associate_target_load_balancer(lb_arn, tg_arn)
+    lis_arn = listener["Listeners"][0]["ListenerArn"]
 
     print_section('7. Create ASG (Auto Scaling Group)')
     # TODO create Autoscaling group
