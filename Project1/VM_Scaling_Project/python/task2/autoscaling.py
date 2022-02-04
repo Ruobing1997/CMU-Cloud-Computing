@@ -1,4 +1,3 @@
-
 from multiprocessing.connection import Listener
 from tracemalloc import Statistic
 from typing import Protocol
@@ -93,7 +92,7 @@ def initialize_test(load_generator_dns, first_web_service_dns):
             time.sleep(1)
             pass 
 
-    # TODO: return log File name
+    # return log File name
     return get_test_id(response)
 
 
@@ -148,7 +147,7 @@ def check_running_instances():
 def terminate_instances(ls_running_instances):
     """
     Terminate all running instance to make sure no cost.
-    :param: 
+    :param ls_running_instances: list that conatains all running instances.
     :return: None
     """
     ec2 = boto3.resource('ec2', region_name='us-east-1')
@@ -177,6 +176,7 @@ def destroy_load_balancer(lb_arn):
 def destroy_target_groups(tg_arn):
     """
     Delete the target group.
+    :param tg_arn: The Amazon Resource name (ARN) of the target group.
     :return: None
     """
     client = boto3.client('elbv2', region_name= "us-east-1")
@@ -214,19 +214,18 @@ def destroy_resources(lb_arn, tg_arn):
     :param tg_arn: The Amazon Resource name (ARN) of the target group.
     :return: None
     """
-    # TODO: implement this method
     # delete asg
     destroy_asg()
     # delete load balancer
     destroy_load_balancer(lb_arn)
     # delete launch configuration
     destroy_launch_config()
-    # delete target groups
-    destroy_target_groups(tg_arn)
     # terminate all intances
     terminate_instances(check_running_instances)
     # delete security groups
     desotry_security_group()
+    # delete target groups
+    destroy_target_groups(tg_arn)
 
 
 def print_section(msg):
@@ -276,6 +275,13 @@ def authenticate(load_generator_dns, submission_password, submission_username):
             pass
 
 def create_security_group(group_name, group_description, sg_permissions):
+    """
+    Create a seurity group with specified name, description and permissions.
+    :param group_name: Security group name.
+    :param group_description: Security group description.
+    :param sg_permissions: Security group permissions.
+    :return Security Group ID.
+    """
     ec2 = boto3.client('ec2', region_name="us-east-1")
     for security_group_names in ec2.describe_security_groups()['SecurityGroups']:
         if security_group_names['GroupName'] == group_name:
@@ -303,14 +309,18 @@ def create_security_group(group_name, group_description, sg_permissions):
         print(e)
 
 def create_ASG_launch_config(name, sg2_id):
-    # TODO: do I need to check if the config name exists?
+    """
+    Create launch configuration.
+    :param name: Launch configuration name.
+    :param sg2_id: Security Group Id.
+    """
     client = boto3.client('autoscaling', region_name='us-east-1')
     for launch_config_names in client.describe_launch_configurations()["LaunchConfigurations"]:
         if launch_config_names["LaunchConfigurationName"] == name:
             return client.describe_launch_configurations(
                 LaunchConfigurationNames = [name,]
             )
-    response = client.create_launch_configuration(
+    client.create_launch_configuration(
         LaunchConfigurationName = name,
         ImageId = WEB_SERVICE_AMI,
         InstanceType = INSTANCE_TYPE,
@@ -321,8 +331,13 @@ def create_ASG_launch_config(name, sg2_id):
             sg2_id
         ]
     )
-    return response
-def create_ELB_target_group(name):
+def create_elb_target_group(name):
+    """
+    Create a target group.
+
+    :param name: Specify target group name
+    :return: Target Group response dictionary.
+    """
     client = boto3.client('elbv2', region_name= "us-east-1")
     for target_group_names in client.describe_target_groups()["TargetGroups"]:
         if target_group_names["TargetGroupName"] == name:
@@ -340,12 +355,20 @@ def create_ELB_target_group(name):
         Tags = TAGS
     )
     return response
+
 def create_application_load_balancer(name, sg_id):
+    """
+    Create load balancer.
+
+    :param name: Specify load balancer's name.s
+    :param sg_id: Security group Id.
+    :return: Load balancer response dictionary after reloading.
+    """
     client = boto3.client('elbv2', region_name= "us-east-1")
     for load_balancer_names in client.describe_load_balancers()["LoadBalancers"]:
         if load_balancer_names["LoadBalancerName"] == name:
             return client.describe_load_balancers(
-                Names = [name,]
+                Names = [name]
             )
     response = client.create_load_balancer(
         Name = name,
@@ -371,8 +394,14 @@ def create_application_load_balancer(name, sg_id):
     return response
 
 def associate_target_load_balancer(lb_arn, tg_arn):
+    """
+    Associate targe tgroup with load balancer use listener to forward.
+
+    :param lb_arn: The Amazon Resource name (ARN) of the load balancer.
+    :param tg_arn: The Amazon Resource name (ARN) of the Target Group.
+    """
     client = boto3.client('elbv2', region_name= "us-east-1")
-    response = client.create_listener(
+    client.create_listener(
         LoadBalancerArn = lb_arn,
         Protocol = 'HTTP',
         Port = 80,
@@ -384,16 +413,23 @@ def associate_target_load_balancer(lb_arn, tg_arn):
         ],
         Tags=TAGS
     )
-    return response
-def create_ASG(name, lau_config, tg_arn):
+
+def create_asg(name, lau_config, tg_arn):
+    """
+    Create auto scaling group.
+
+    :param name: Specify auto scaling group name
+    :param lau_config: Launch configuration.
+    :param tg_arn: The Amazon Resource name (ARN) of the Target Group.
+    """
     client = boto3.client('autoscaling', region_name= "us-east-1")
     for auto_scaling_names in client.describe_auto_scaling_groups()["AutoScalingGroups"]:
         if auto_scaling_names["AutoScalingGroupName"] == name:
             return client.describe_auto_scaling_groups(
                 AutoScalingGroupNames=[name,]
             )
-    response = client.create_auto_scaling_group(
-        AutoScalingGroupName=name,
+    client.create_auto_scaling_group(
+        AutoScalingGroupName = name,
         LaunchConfigurationName = lau_config,
         MinSize = configuration['asg_min_size'],
         MaxSize = configuration['asg_max_size'],
@@ -401,7 +437,6 @@ def create_ASG(name, lau_config, tg_arn):
         HealthCheckType = 'EC2',
         HealthCheckGracePeriod = configuration['health_check_grace_period'],
         DefaultCooldown = configuration['asg_default_cool_down_period'],
-        # VPCZoneIdentifier = 'subnet-0ae3c6149e1297348',
         AvailabilityZones = [
             'us-east-1b',
             'us-east-1e',
@@ -413,9 +448,13 @@ def create_ASG(name, lau_config, tg_arn):
         TargetGroupARNs = [tg_arn],
         Tags=TAGS
     )
-    return response
-
 def create_attach_policy_scale_in(asg_name):
+    """
+    Create auto scaling policy for scale in.
+
+    :param asg_name: Auto scaling group name.
+    :return: Scaling policy response as a dictionary.
+    """
     client = boto3.client('autoscaling', region_name= "us-east-1")
     response = client.put_scaling_policy(
         AutoScalingGroupName = asg_name,
@@ -426,9 +465,16 @@ def create_attach_policy_scale_in(asg_name):
         Cooldown = configuration["cool_down_period_scale_in"],
     )
     return response
+
 def associate_cloudwatch_scale_in(alrm_name, scale_in_arn):
+    """
+    Attach scale in policy to cloud watch and use CPU utilizaion as metric.
+
+    :param alrm_name: Cloud watch alarm name.
+    :param scale_in_arn: The Amazon Resource name (ARN) of the scale in.
+    """
     client = boto3.client('cloudwatch', region_name= "us-east-1")
-    response = client.put_metric_alarm(
+    client.put_metric_alarm(
         AlarmName = alrm_name,
         AlarmDescription = "Cloudwatch for scale in",
         AlarmActions = [scale_in_arn],
@@ -450,6 +496,12 @@ def associate_cloudwatch_scale_in(alrm_name, scale_in_arn):
     )
 
 def create_attach_policy_scale_out(asg_name):
+    """
+    Create auto scaling policy for scale out.
+
+    :param asg_name: Auto scaling group name.
+    :return: Scaling policy response as a dictionary.
+    """
     client = boto3.client('autoscaling', region_name= "us-east-1")
     response = client.put_scaling_policy(
         AutoScalingGroupName = asg_name,
@@ -462,8 +514,14 @@ def create_attach_policy_scale_out(asg_name):
     return response
 
 def associate_cloudwatch_scale_out(alrm_name, scale_out_arn):
+    """
+    Attach scale out policy to cloud watch and use CPU utilizaion as metric.
+
+    :param alrm_name: Cloud watch alarm name.
+    :param scale_out_arn: The Amazon Resource name (ARN) of the scale out.
+    """
     client = boto3.client('cloudwatch', region_name= "us-east-1")
-    response = client.put_metric_alarm(
+    client.put_metric_alarm(
         AlarmName = alrm_name,
         AlarmDescription = "Cloudwatch for scale in",
         AlarmActions = [scale_out_arn],
@@ -511,7 +569,7 @@ def main():
          }
     ]
 
-    # TODO: create two separate security groups and obtain the group ids
+    # create two separate security groups and obtain the group ids
     sg1_id = create_security_group(
         "Load Generator HTTP Sec Group", 
         "Permissions for load generator",
@@ -526,23 +584,22 @@ def main():
     print("sg2 id", sg2_id)
     print_section('2 - create LG')
 
-    # TODO: Create Load Generator instance and obtain ID and DNS
-    ec2 = boto3.resource('ec2',region_name='us-east-1')
+    # Create Load Generator instance and obtain ID and DNS
     lg = create_instance(LOAD_GENERATOR_AMI, sg1_id)
     lg_id = lg.instance_id
     lg_dns = lg.public_dns_name
     print("Load Generator running: id={} dns={}".format(lg_id, lg_dns))
 
     print_section('3. Create LC (Launch Config)')
-    # TODO: create launch configuration
-    lau_config = create_ASG_launch_config(LAUNCH_CONFIGURATION_NAME, sg2_id)
+    # create launch configuration
+    create_ASG_launch_config(LAUNCH_CONFIGURATION_NAME, sg2_id)
 
     print_section('4. Create TG (Target Group)')
-    # TODO: create Target Group
-    tg_arn = create_ELB_target_group(AUTO_SCALING_TARGET_GROUP)['TargetGroups'][0]['TargetGroupArn']
+    # create Target Group
+    tg_arn = create_elb_target_group(AUTO_SCALING_TARGET_GROUP)['TargetGroups'][0]['TargetGroupArn']
     print_section('5. Create ELB (Elastic/Application Load Balancer)')
 
-    # TODO create Load Balancer
+    # create Load Balancer
     # https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/elbv2.html
     lb = create_application_load_balancer(LOAD_BALANCER_NAME, sg2_id)
     lb_arn = lb["LoadBalancers"][0]["LoadBalancerArn"]
@@ -550,24 +607,21 @@ def main():
     print("lb started. ARN={}, DNS={}".format(lb_arn, lb_dns))
 
     print_section('6. Associate ELB with target group')
-    # TODO Associate ELB with target group
-    listener = associate_target_load_balancer(lb_arn, tg_arn)
-    lis_arn = listener["Listeners"][0]["ListenerArn"]
+    # Associate ELB with target group
+    associate_target_load_balancer(lb_arn, tg_arn)
 
     print_section('7. Create ASG (Auto Scaling Group)')
-    # TODO create Autoscaling group
-    asg = create_ASG(AUTO_SCALING_GROUP_NAME, LAUNCH_CONFIGURATION_NAME, tg_arn)
+    # create Autoscaling group
+    create_asg(AUTO_SCALING_GROUP_NAME, LAUNCH_CONFIGURATION_NAME, tg_arn)
     print_section('8. Create policy and attached to ASG')
-    # TODO Create Simple Scaling Policies for ASG
+    # Create Simple Scaling Policies for ASG
     scale_in = create_attach_policy_scale_in(AUTO_SCALING_GROUP_NAME)
     scale_out = create_attach_policy_scale_out(AUTO_SCALING_GROUP_NAME)
 
     print_section('9. Create Cloud Watch alarm. Action is to invoke policy.')
-    # TODO create CloudWatch Alarms and link Alarms to scaling policies
-    # cw_scale_in = associate_cloudwatch_scale_in(scale_in["Alarms"][0]["AlarmName"])
-    # cw_scale_out = associate_cloudwatch_scale_out(scale_out["Alarms"][0]["AlarmName"])
-    cw_scale_in = associate_cloudwatch_scale_in("Cloud Watch Scale In", scale_in["PolicyARN"])
-    cw_scale_out = associate_cloudwatch_scale_out("Cloud Watch Scale Out", scale_out["PolicyARN"])
+    # Create CloudWatch Alarms and link Alarms to scaling policies
+    associate_cloudwatch_scale_in("Cloud Watch Scale In", scale_in["PolicyARN"])
+    associate_cloudwatch_scale_out("Cloud Watch Scale Out", scale_out["PolicyARN"])
 
     print_section('10. Authenticate with the load generator')
     authenticate(lg_dns, SUBMISSION_PASSWORD, SUBMISSION_USERNAME)
