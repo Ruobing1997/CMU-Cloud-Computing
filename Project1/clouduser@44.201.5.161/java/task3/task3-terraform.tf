@@ -75,12 +75,12 @@ resource "aws_security_group" "elb_asg" {
 # PLEASE EDIT THIS SECTION #
 ############################
 
-# Step 1:
-# Add missing values below
+# Step 1: 
+# TODO: Add missing values below 
 # ================================
 resource "aws_launch_configuration" "lc" {
-  image_id        = "ami-042de649749923897"
-  instance_type   = "m5.large"
+  image_id        = "<AMI_ID>"
+  instance_type   = "<INSTANCE_TYPE>"
   security_groups = [aws_security_group.elb_asg.id]
 }
 
@@ -88,21 +88,21 @@ resource "aws_launch_configuration" "lc" {
 # TODO: fill the missing values per the placeholders
 resource "aws_autoscaling_group" "asg" {
   availability_zones        = ["us-east-1a"]
-  max_size                  = 3
-min_size                  = 1
-desired_capacity          = 1
-default_cooldown          = 16
-health_check_grace_period = 70
-health_check_type         = "EC2"
-launch_configuration      = aws_launch_configuration.lc.name
-target_group_arns         = ["<FILL_IN_AFTER_STEP2>"]
-tags                      = local.asg_tags
+  max_size                  = <MAX_NUM_INSTANCES>
+  min_size                  = <MIN_NUM_INSTANCES>
+  desired_capacity          = <DEFAULT_NUM_INSTANCES>
+  default_cooldown          = <COOLDOWN_PERIOD>
+  health_check_grace_period = <HEALTHCHECK_PERIOD>
+  health_check_type         = "<HEALTHCHECK_TYPE>"
+  launch_configuration      = aws_launch_configuration.lc.name
+  target_group_arns         = ["<FILL_IN_AFTER_STEP2>"]
+  tags                      = local.asg_tags
 }
 
-# Create a Load Generator AWS instance with proper tags
+# TODO: Create a Load Generator AWS instance with proper tags
 
 # Step 2:
-# Create an Application Load Balancer with appropriate listeners and target groups
+# TODO: Create an Application Load Balancer with appropriate listeners and target groups
 # The lb_listener documentation demonstrates how to connect these resources
 # Create and attach your subnet to the Application Load Balancer 
 #

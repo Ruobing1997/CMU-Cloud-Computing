@@ -270,7 +270,7 @@ def calculate_interval_sec(cur, prev):
     duration = cur - prev
     return duration.total_seconds()
 
-def check_running_instances(init = None):
+def check_running_instances():
     """
     Check the current running instances.
     :return: a list that contains all running instances.
@@ -280,11 +280,7 @@ def check_running_instances(init = None):
     instances = ec2.instances.filter(
         Filters=[{'Name': 'instance-state-name', 'Values': ['running']}])
     for instance in instances:
-        if (init != None):
-            if (instance.id != init):
-                ls_running_instances.append(instance.id)
-        else:
-            ls_running_instances.append(instance.id)
+        ls_running_instances.append(instance.id)
     return ls_running_instances
 def terminate_instances(ls_running_instances):
     """
@@ -328,8 +324,7 @@ def main():
         sg_permissions
     )  # Security group for Web Service instances
     print_section('2 - create LG')
-    # get the initial instance id:
-    ini_id = check_running_instances()[0]
+
     # Create Load Generator instance and obtain ID and DNS
     ec2 = boto3.resource('ec2',region_name='us-east-1')
     print("sg ID: ", sg1_id)
@@ -364,7 +359,7 @@ def main():
     print_section('End Test')
 
     # Terminate Resources
-    terminate_instances(check_running_instances(init=ini_id))
+    terminate_instances(check_running_instances())
 
 
 if __name__ == '__main__':

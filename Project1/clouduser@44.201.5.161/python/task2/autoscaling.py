@@ -1,3 +1,7 @@
+from multiprocessing.connection import Listener
+from tracemalloc import Statistic
+from typing import Protocol
+from urllib import response
 import boto3
 import botocore
 import os
@@ -6,6 +10,8 @@ import requests
 import time
 import json
 import re
+
+from torch import threshold
 
 ########################################
 # Constants
@@ -125,10 +131,9 @@ def get_test_id(response):
 
     return regexpr.findall(response_text)[0]
 
-def check_running_instances(init = None):
+def check_running_instances():
     """
     Check the current running instances.
-    :param init: Initial instance Id which is the initial running instance.
     :return: a list that contains all running instances.
     """
     ec2 = boto3.resource('ec2', region_name='us-east-1')
@@ -136,11 +141,7 @@ def check_running_instances(init = None):
     instances = ec2.instances.filter(
         Filters=[{'Name': 'instance-state-name', 'Values': ['running']}])
     for instance in instances:
-        if (init != None):
-            if (instance.id != init):
-                ls_running_instances.append(instance.id)
-        else:
-            ls_running_instances.append(instance.id)
+        ls_running_instances.append(instance.id)
     return ls_running_instances
 
 def terminate_instances(ls_running_instances, lg_id):
@@ -219,7 +220,7 @@ def desotry_security_group():
     security_group.delete(
         GroupName = "ASG ELP Sec Group"
     )
-def destroy_resources(lb_arn, tg_arn, lg_id, ini_id):
+def destroy_resources(lb_arn, tg_arn, lg_id):
     """
     Delete all resources created for this task
     :param lb_arn: The Amazon Resource name (ARN) of the load balancer.
@@ -233,7 +234,7 @@ def destroy_resources(lb_arn, tg_arn, lg_id, ini_id):
     # delete launch configuration
     destroy_launch_config()
     # terminate all intances
-    terminate_instances(check_running_instances(init=ini_id), lg_id)
+    terminate_instances(check_running_instances(), lg_id)
     # delete target groups
     destroy_target_groups(tg_arn)
     # delete security groups
@@ -587,8 +588,7 @@ def main():
     print("sg1 id", sg1_id)
     print("sg2 id", sg2_id)
     print_section('2 - create LG')
-    # get the initial instance id:
-    ini_id = check_running_instances()[0]
+
     # Create Load Generator instance and obtain ID and DNS
     lg = create_instance(LOAD_GENERATOR_AMI, sg1_id)
     lg_id = lg.instance_id
@@ -631,18 +631,18 @@ def main():
     print_section('10. Authenticate with the load generator')
     authenticate(lg_dns, SUBMISSION_PASSWORD, SUBMISSION_USERNAME)
 
-    print_section('11. Submit ELB DNS to LG, starting warm up test.')
-    warmup_log_name = initialize_warmup(lg_dns, lb_dns)
-    while not is_test_complete(lg_dns, warmup_log_name):
-        time.sleep(1)
+    # print_section('11. Submit ELB DNS to LG, starting warm up test.')
+    # warmup_log_name = initialize_warmup(lg_dns, lb_dns)
+    # while not is_test_complete(lg_dns, warmup_log_name):
+    #     time.sleep(1)
 
-    print_section('12. Submit ELB DNS to LG, starting auto scaling test.')
-    # May take a few minutes to start actual test after warm up test finishes
-    log_name = initialize_test(lg_dns, lb_dns)
-    while not is_test_complete(lg_dns, log_name):
-        time.sleep(1)
+    # print_section('12. Submit ELB DNS to LG, starting auto scaling test.')
+    # # May take a few minutes to start actual test after warm up test finishes
+    # log_name = initialize_test(lg_dns, lb_dns)
+    # while not is_test_complete(lg_dns, log_name):
+    #     time.sleep(1)
 
-    destroy_resources(lb_arn, tg_arn, lg_id, ini_id)
+    destroy_resources(lb_arn, tg_arn, lg_id)
 
 
 if __name__ == "__main__":
