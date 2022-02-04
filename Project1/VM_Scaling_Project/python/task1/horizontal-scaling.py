@@ -221,6 +221,13 @@ def get_test_start_time(lg_dns, log_name):
     return parse(start_time)
 
 def create_security_group(group_name, group_description, sg_permissions):
+    """
+    Create a seurity group with specified name, description and permissions.
+    :param group_name: Security group name.
+    :param group_description: Security group description.
+    :param sg_permissions: Security group permissions.
+    :return Security Group ID.
+    """
     ec2 = boto3.client('ec2', region_name="us-east-1")
     for security_group_names in ec2.describe_security_groups()['SecurityGroups']:
         if security_group_names['GroupName'] == group_name:
@@ -248,15 +255,26 @@ def create_security_group(group_name, group_description, sg_permissions):
         print(e)
 
 def update_current_time():
+    """
+    Update the current time.
+    :return: The current time as datetime object.
+    """
     return datetime.now().astimezone(pytz.UTC)
-def parse_datetime_object(last_launch_time):
-    last_launch_datetime = datetime.strptime(last_launch_time.split("+")[0], "%Y-%m-%dT%H:%M:%S")
-    return last_launch_datetime
 def calculate_interval_sec(cur, prev):
+    """
+    Calculate the time interval between the current time and previous time.
+    :param cur: Current time.
+    :param prev: Previous time.
+    :return: Totol seconds between these two times.
+    """
     duration = cur - prev
     return duration.total_seconds()
 
 def check_running_instances():
+    """
+    Check the current running instances.
+    :return: a list that contains all running instances.
+    """
     ec2 = boto3.resource('ec2', region_name='us-east-1')
     ls_running_instances = []
     instances = ec2.instances.filter(
@@ -265,6 +283,11 @@ def check_running_instances():
         ls_running_instances.append(instance.id)
     return ls_running_instances
 def terminate_instances(ls_running_instances):
+    """
+    Terminate all running instance to make sure no cost.
+    :param ls_running_instances: list that conatains all running instances.
+    :return: None
+    """
     ec2 = boto3.resource('ec2', region_name='us-east-1')
     ec2.instances.filter(InstanceIds=ls_running_instances).terminate()
 
@@ -272,14 +295,13 @@ def terminate_instances(ls_running_instances):
 # Main routine
 ########################################
 def main():
-    # BIG PICTURE TODO: Provision resources to achieve horizontal scalability
+    # BIG PICTURE Provision resources to achieve horizontal scalability
     #   - Create security groups for Load Generator and Web Service
     #   - Provision a Load Generator instance
     #   - Provision a Web Service instance
     #   - Register Web Service DNS with Load Generator
     #   - Add Web Service instances to Load Generator
     #   - Terminate resources
-
     print_section('1 - create two security groups')
     sg_permissions = [
         {'IpProtocol': 'tcp',

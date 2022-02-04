@@ -115,7 +115,7 @@ def initialize_warmup(load_generator_dns, load_balancer_dns):
             time.sleep(1)
             pass  
 
-    # TODO: return log File name
+    # return log File name
     return get_test_id(response)
 
 
@@ -334,7 +334,6 @@ def create_ASG_launch_config(name, sg2_id):
 def create_elb_target_group(name):
     """
     Create a target group.
-
     :param name: Specify target group name
     :return: Target Group response dictionary.
     """
@@ -359,7 +358,6 @@ def create_elb_target_group(name):
 def create_application_load_balancer(name, sg_id):
     """
     Create load balancer.
-
     :param name: Specify load balancer's name.s
     :param sg_id: Security group Id.
     :return: Load balancer response dictionary after reloading.
@@ -396,7 +394,6 @@ def create_application_load_balancer(name, sg_id):
 def associate_target_load_balancer(lb_arn, tg_arn):
     """
     Associate targe tgroup with load balancer use listener to forward.
-
     :param lb_arn: The Amazon Resource name (ARN) of the load balancer.
     :param tg_arn: The Amazon Resource name (ARN) of the Target Group.
     """
@@ -417,7 +414,6 @@ def associate_target_load_balancer(lb_arn, tg_arn):
 def create_asg(name, lau_config, tg_arn):
     """
     Create auto scaling group.
-
     :param name: Specify auto scaling group name
     :param lau_config: Launch configuration.
     :param tg_arn: The Amazon Resource name (ARN) of the Target Group.
@@ -451,7 +447,6 @@ def create_asg(name, lau_config, tg_arn):
 def create_attach_policy_scale_in(asg_name):
     """
     Create auto scaling policy for scale in.
-
     :param asg_name: Auto scaling group name.
     :return: Scaling policy response as a dictionary.
     """
@@ -469,7 +464,6 @@ def create_attach_policy_scale_in(asg_name):
 def associate_cloudwatch_scale_in(alrm_name, scale_in_arn):
     """
     Attach scale in policy to cloud watch and use CPU utilizaion as metric.
-
     :param alrm_name: Cloud watch alarm name.
     :param scale_in_arn: The Amazon Resource name (ARN) of the scale in.
     """
@@ -498,7 +492,6 @@ def associate_cloudwatch_scale_in(alrm_name, scale_in_arn):
 def create_attach_policy_scale_out(asg_name):
     """
     Create auto scaling policy for scale out.
-
     :param asg_name: Auto scaling group name.
     :return: Scaling policy response as a dictionary.
     """
@@ -516,7 +509,6 @@ def create_attach_policy_scale_out(asg_name):
 def associate_cloudwatch_scale_out(alrm_name, scale_out_arn):
     """
     Attach scale out policy to cloud watch and use CPU utilizaion as metric.
-
     :param alrm_name: Cloud watch alarm name.
     :param scale_out_arn: The Amazon Resource name (ARN) of the scale out.
     """
@@ -546,7 +538,7 @@ def associate_cloudwatch_scale_out(alrm_name, scale_out_arn):
 # Main routine
 ########################################
 def main():
-    # BIG PICTURE TODO: Programmatically provision autoscaling resources
+    # BIG PICTURE Programmatically provision autoscaling resources
     #   - Create security groups for Load Generator and ASG, ELB
     #   - Provision a Load Generator
     #   - Generate a Launch Configuration
