@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-profile-deployment
+  labels:
+    app: spring-profile
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: spring-profile
+  template:
+    metadata:
+      labels:
+        app: spring-profile
+    spec:
+      containers:
+        - name: task3app
+          image: gcr.io/gcp-docker-kubernetes-1561997/task3app:1.0
+          ports:
+            - containerPort: 80
+          env:
+            - name: MYSQL_DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-profile-config
+                  key: MYSQL_DB_HOST
+            - name: MYSQL_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-profile-config
+                  key: MYSQL_DB_USER
+            - name: MYSQL_DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-profile-config
+                  key: MYSQL_DB_PASSWORD
+            - name: MYSQL_DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-profile-config
+                  key: MYSQL_DB_PORT
+          resources:
+            requests:
+              cpu: 200m
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: php-apache-profile
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: spring-profile-deployment
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 83

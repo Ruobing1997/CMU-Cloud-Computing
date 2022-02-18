@@ -1,0 +1,4 @@
+edu/cmu/controller/ProfileController.class
+edu/cmu/model/Profile.class
+edu/cmu/model/ProfileRepository.class
+edu/cmu/ProfileApplication.class

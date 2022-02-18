@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minimal-ingress
+spec:
+  ingressClassName: nginx-ingress
+  rules:
+    - http:
+        paths:
+          - path: /login
+            pathType: Prefix
+            backend:
+              service:
+                name: spring-login-service
+                port:
+                  number: 80
+          - path: /profile
+            pathType: Prefix
+            backend:
+              service:
+                name: spring-profile-service
+                port:
+                  number: 80

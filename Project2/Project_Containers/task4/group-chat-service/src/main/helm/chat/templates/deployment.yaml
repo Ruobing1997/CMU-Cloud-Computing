@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-chat-deployment
+  labels:
+    app: spring-chat
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: spring-chat
+  template:
+    metadata:
+      labels:
+        app: spring-chat
+    spec:
+      containers:
+        - name: task4chat
+          image: gcr.io/gcp-docker-kubernetes-1561997/task4chat:1.1
+          ports:
+            - containerPort: 80
+          env:
+            - name: SPRING_REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-chat-config
+                  key: SPRING_REDIS_HOST
+            - name: SPRING_REDIS_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-chat-config
+                  key: SPRING_REDIS_PASSWORD
+            - name: SPRING_REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-chat-config
+                  key: SPRING_REDIS_PORT
+            - name: RAW_TOPIC_MESSAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-chat-config
+                  key: RAW_TOPIC_MESSAGE
+            - name: LIST_OF_PROFILE_ENDPOINTS
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-chat-config
+                  key: LIST_OF_PROFILE_ENDPOINTS
+            - name: MYSQL_DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-chat-config
+                  key: MYSQL_DB_HOST
+            - name: MYSQL_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-chat-config
+                  key: MYSQL_DB_USER
+            - name: MYSQL_DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-chat-config
+                  key: MYSQL_DB_PASSWORD
+            - name: MYSQL_DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-chat-config
+                  key: MYSQL_DB_PORT
